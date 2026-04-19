@@ -1,2 +1,13 @@
-# segment-tree-benchmarks
-Project to explore the performance of Segment Trees vs Other Common Data Structures for Insert/Update/Delete Actions for Very Large Data
+# Segment Trees with Lazy Propagation
+
+## What This Project Does
+
+## The Data Structure
+
+## How to Compile
+
+## How to Run
+
+## Results
+
+## Why This Is Interesting
