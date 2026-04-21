@@ -72,65 +72,91 @@ following results:
 
 | Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
 |------|-------|-------------|-------------------|---------|
-| 1K | 0.33 ms | 0.001 ms | 0.002 ms | Segment |
-| 10K | 2.83 ms | 0.001 ms | 0.002 ms | Segment |
-| 100K | 19.03 ms | 0.001 ms | 0.001 ms | Tie |
-| 1M | 135.69 ms | 0.001 ms | 0.001 ms | Tie |
-| 10M | 1119.08 ms | 0.001 ms | 0.004 ms | Segment |
-| 100M | 11510 ms | 0.001 ms | 0.001 ms | Tie |
+| 1K | 0.111 ms | 0.000375 ms | 0.000583 ms | Segment |
+| 10K | 1.02 ms | 0.000333 ms | 0.0005 ms | Segment |
+| 100K | 10.663 ms | 0.000584 ms | 0.001125 ms | Segment |
+| 1M | 115.619 ms | 0.00075 ms | 0.0005 ms | Lazy |
+| 10M | 1141.33 ms | 0.000833 ms | 0.003959 ms | Segment |
+| 100M | 11651.7 ms | 0.000709 ms | 0.005083 ms | Segment |
 
-### Point Update (Naive vs Standard Segment Tree)
+### Point Update (Naive vs Standard Segment Tree vs Lazy Segment Tree)
 
-| Size | Naive | Segment Tree | Winner |
-|------|-------|-------------|---------|
-| 1K | 0.002 ms | 0.011 ms | Naive |
-| 10K | 0.001 ms | 0.013 ms | Naive |
-| 100K | 0.001 ms | 0.017 ms | Naive |
-| 1M | 0.001 ms | 0.022 ms | Naive |
-| 10M | 0.003 ms | 0.045 ms | Naive |
-| 100M | 0.006 ms | 0.077 ms | Naive |
+| Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
+|------|-------|-------------|-------------------|---------|
+| 1K | 0.001542 ms | 0.012334 ms | 0.015917 ms | Naive |
+| 10K | 0.001 ms | 0.015208 ms | 0.016042 ms | Naive |
+| 100K | 0.001541 ms | 0.03225 ms | 0.027666 ms | Naive |
+| 1M | 0.001375 ms | 0.036584 ms | 0.028375 ms | Naive |
+| 10M | 0.003708 ms | 0.055167 ms | 0.06025 ms | Naive |
+| 100M | 0.004708 ms | 0.070208 ms | 0.074583 ms | Naive |
 
-### Range Update (Naive vs Lazy Segment Tree)
+### Range Update (Naive vs Standard Segment Tree vs Lazy Segment Tree)
 
-| Size | Naive | Lazy Segment Tree | Winner |
-|------|-------|-------------------|---------|
-| 1K | 0.041 ms | 0.043 ms | Naive |
-| 10K | 0.328 ms | 0.049 ms | Lazy |
-| 100K | 3.78 ms | 0.093 ms | Lazy |
-| 1M | 32.47 ms | 0.144 ms | Lazy |
-| 10M | 412.13 ms | 0.234 ms | Lazy |
-| 100M | 3647.66 ms | 0.369 ms | Lazy |
+| Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
+|------|-------|-------------|-------------------|---------|
+| 1K | 0.071667 ms | 0.017958 ms | 0.032667 ms | Segment |
+| 10K | 0.436583 ms | 0.024958 ms | 0.045333 ms | Segment |
+| 100K | 5.4395 ms | 0.040666 ms | 0.092666 ms | Segment |
+| 1M | 42.906 ms | 0.03925 ms | 0.144708 ms | Segment |
+| 10M | 422.548 ms | 0.081833 ms | 0.23075 ms | Segment |
+| 100M | 4068.01 ms | 0.108667 ms | 0.3705 ms | Segment |
+
+### Narrow Range Update - 1000 element range (Naive vs Standard Segment Tree vs Lazy Segment Tree)
+
+| Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
+|------|-------|-------------|-------------------|---------|
+| 1K | skipped | skipped | skipped | N/A |
+| 10K | 0.17325 ms | 0.025875 ms | 0.043875 ms | Segment |
+| 100K | 0.117708 ms | 0.029333 ms | 0.060125 ms | Segment |
+| 1M | 0.17525 ms | 0.02975 ms | 0.083458 ms | Segment |
+| 10M | 0.142667 ms | 0.058458 ms | 0.130583 ms | Segment |
+| 100M | 0.203208 ms | 0.09225 ms | 0.214041 ms | Segment |
 
 ## Why This Is Interesting
 
-The results surprised me in some ways. I'd expected a slam dunk for Lazy
-across all tests as the data size grew, but that wasn't necessarily the case. 
-For Point Updates, Naive was the clear winner, but for mixed workloads that 
-also include range updates, the field rapidly narrows until only the Lazy
-method is left standing, with outstanding overall performance, even at very
-large data sizes.
+The results surprised me. I expected Lazy Propagation to dominate across 
+all tests as data size grew, but that wasn't the case.
 
-A few highlights:
+Here's what the data actually shows, and why:
 
-- **Range sum** — the Segment Tree and Lazy Segment Tree are effectively 
-  instantaneous regardless of dataset size, while naive grows linearly. 
-  At 100M elements, naive takes over 11 seconds. The Segment Tree takes 
-  less than a millisecond. Lazy only narrowly missed winning.
+- **Point update** — Naive wins decisively. A direct array write 
+  (`arr[index] = value`) is a single operation, while both tree 
+  implementations must traverse O(log n) nodes to ripple the change upward.
 
-- **Point update** — an interesting reversal. Naive actually *outperforms* 
-  the Segment Tree here because a direct array write (`arr[index] = value`) 
-  is a single operation, while the Segment Tree must traverse O(log n) nodes 
-  to ripple the change upward.
+- **Range sum** — Both tree implementations are effectively instantaneous 
+  regardless of dataset size, while Naive grows linearly. At 100M elements, 
+  Naive takes over 11 seconds while both trees take under a millisecond. 
+  Standard Segment Tree narrowly edges out Lazy in most runs.
 
-- **Range update** — Lazy Propagation's moment to shine. At 100M elements, 
-  naive takes 3,647ms while Lazy takes 0.37ms — roughly a 10,000x speedup. 
-  This is exactly the class of operation that was painful at Netflix scale.
+- **Range update (wide and narrow)** — Standard Segment Tree surprisingly 
+  outperforms Lazy in both tests. The reason: this benchmark measures update 
+  time in isolation, with no subsequent queries. Lazy Propagation's deferred 
+  update strategy only pays off when updates are followed by queries,
+  allowing pending work to be skipped entirely if a node is never visited. 
+  When every update is immediately "due", the overhead of maintaining the 
+  lazy array adds cost without saving any work.
 
-## A Note on Integer Overflow
+The key takeaway is that **there is no universally best data structure** — 
+the right choice depends entirely on your operational workload:
 
-An early version of this implementation used `int` for range sum return 
-values. At small dataset sizes the results looked correct. At 100M elements 
-with random values between 1 and 1000, the true sum exceeded `int`'s maximum 
-value of ~2.1 billion, producing a result of `-1,494,279,353` — a negative 
-number with no compiler warning. The fix was straightforward: switching to 
-`long long`, which supports values up to ~9.2 quintillion.
+- If your system is dominated by **range queries**, either tree implementation 
+  works. Both are dramatically faster than Naive.
+- If your system performs frequent **point updates**, Naive is surprisingly 
+  competitive.
+- If your system mixes **range updates with range queries** at **large 
+  scale**, Lazy Propagation should shine, but this benchmark doesn't test this 
+  scenario directly. A mixed-workload benchmark would be needed to confirm 
+  this theoretical advantage empirically.
+
+Regardless, understanding your operational or usage profile before choosing a 
+data structure is the real lesson here.
+
+## Limitations and Future Work
+
+- **Mixed workload testing** — the current benchmark measures each operation 
+  in isolation. A more realistic benchmark would mix range updates and 
+  range queries to better reveal Lazy Propagation's theoretical advantage.
+- **Integer overflow** — an early version used `int` for range sum return 
+  values. At 100M elements with random values between 1 and 1000, the true 
+  sum exceeded `int`'s maximum of ~2.1 billion, silently producing 
+  `-1,494,279,353` with no compiler warning. Fixed by switching to `long long`.
