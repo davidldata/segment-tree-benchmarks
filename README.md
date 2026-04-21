@@ -104,8 +104,8 @@ following results:
 ## Why This Is Interesting
 
 The results surprised me in some ways. I'd expected a slam dunk for Lazy
-all test as the data size grew, but that wasn't necessarily the case. For
-Point Updates, Naive was the clear winner, but for mixed workloads that 
+across all tests as the data size grew, but that wasn't necessarily the case. 
+For Point Updates, Naive was the clear winner, but for mixed workloads that 
 also include range updates, the field rapidly narrows until only the Lazy
 method is left standing, with outstanding overall performance, even at very
 large data sizes.
