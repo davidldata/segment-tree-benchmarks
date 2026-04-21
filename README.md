@@ -22,7 +22,7 @@ queries to run in O(log n) time by combining results from a small number of
 relevant nodes rather than scanning the full range.
 
 A standard Segment Tree handles point updates efficiently, but range updates 
-remain costly — every affected element needs to be touched. Lazy Propagation 
+remain costly since every affected element needs to be touched. Lazy Propagation 
 solves this by deferring updates: instead of immediately applying a change to 
 all affected elements, pending updates are stored at higher-level nodes and 
 pushed down only when necessary. The result is that both range queries and 
@@ -32,17 +32,24 @@ range updates run in O(log n) time.
 
 During my time at Netflix, I witnessed firsthand how quickly data problems 
 transform as systems scale. As the company transitioned from a DVD-based 
-business to a global streaming platform, data volumes didn't just grow — 
-they changed in character entirely. What had once been manageable batch data 
-about physical shipments became a continuous, high-velocity stream of every 
-play, pause, rewind, and fast-forward across tens of millions of users globally.
+business to a global streaming platform, data volumes grew exponentially. 
+What had once been manageable batch data about physical shipments became a 
+continuous, high-velocity stream of every play, pause, rewind, and 
+fast-forward across tens of millions of users and hundreds of millions of
+devices globally.
 
-The consequences were concrete. Operations that were especially painful 
-involved repeated computations over ranges of data: aggregating metrics across 
-time windows, applying updates across subsets of records, or recalculating 
-rolling statistics as new events arrived. The naive approach — iterating 
+The consequences of this data explosion were significant and immediate. 
+Processes that previously completed in reasonable times measured in several hours
+now needed to be measured in half day increments. Operations that were especially 
+painful involved repeated computations over ranges of data, such as aggregating 
+metrics across time windows, applying updates across subsets of records, or 
+recalculating rolling statistics as new events arrived. The naive approach — iterating 
 through every element in a range — runs in O(n) time and becomes impractical 
 at scale.
+
+So, for this project, I decided to test and benchmark the performance of 
+several data structures against some of the scenarios and conditions we faced
+at Netflix.
 
 ## How to Compile
 
@@ -114,8 +121,8 @@ following results:
 
 ## Why This Is Interesting
 
-The results surprised me. I expected Lazy Propagation to dominate across 
-all tests as data size grew, but that wasn't the case.
+The benchmark results surprised me. I expected Lazy Propagation to dominate across 
+all tests as data size grew, but that wasn't at all the case.
 
 Here's what the data actually shows, and why:
 
@@ -134,13 +141,15 @@ Here's what the data actually shows, and why:
   update strategy only pays off when updates are followed by queries,
   allowing pending work to be skipped entirely if a node is never visited. 
   When every update is immediately "due", the overhead of maintaining the 
-  lazy array adds cost without saving any work.
+  lazy array adds cost without saving any work. So, in this scenario, Lazy
+  is essentially Segment + Lazy-array-maintenance, which is why Lazy didn't
+  win at any of the range_update tests.
 
-The key takeaway is that **there is no universally best data structure** — 
+The key takeaway is that **there is no universally best data structure**, 
 the right choice depends entirely on your operational workload:
 
 - If your system is dominated by **range queries**, either tree implementation 
-  works. Both are dramatically faster than Naive.
+  works, and both are dramatically faster than Naive.
 - If your system performs frequent **point updates**, Naive is surprisingly 
   competitive.
 - If your system mixes **range updates with range queries** at **large 
