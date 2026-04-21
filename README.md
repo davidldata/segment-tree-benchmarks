@@ -79,45 +79,45 @@ following results:
 
 | Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
 |------|-------|-------------|-------------------|---------|
-| 1K | 0.111 ms | 0.000375 ms | 0.000583 ms | Segment |
-| 10K | 1.02 ms | 0.000333 ms | 0.0005 ms | Segment |
-| 100K | 10.663 ms | 0.000584 ms | 0.001125 ms | Segment |
-| 1M | 115.619 ms | 0.00075 ms | 0.0005 ms | Lazy |
-| 10M | 1141.33 ms | 0.000833 ms | 0.003959 ms | Segment |
-| 100M | 11651.7 ms | 0.000709 ms | 0.005083 ms | Segment |
+| 1K | 0.117 ms | 0.000333 ms | 0.000792 ms | Segment |
+| 10K | 1.096 ms | 0.000375 ms | 0.000584 ms | Segment |
+| 100K | 14.348 ms | 0.000917 ms | 0.002708 ms | Segment |
+| 1M | 109.306 ms | 0.000375 ms | 0.000875 ms | Segment |
+| 10M | 1171.54 ms | 0.000875 ms | 0.001291 ms | Segment |
+| 100M | 11446.7 ms | 0.000792 ms | 0.005083 ms | Segment |
 
 ### Point Update (Naive vs Standard Segment Tree vs Lazy Segment Tree)
 
 | Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
 |------|-------|-------------|-------------------|---------|
-| 1K | 0.001542 ms | 0.012334 ms | 0.015917 ms | Naive |
-| 10K | 0.001 ms | 0.015208 ms | 0.016042 ms | Naive |
-| 100K | 0.001541 ms | 0.03225 ms | 0.027666 ms | Naive |
-| 1M | 0.001375 ms | 0.036584 ms | 0.028375 ms | Naive |
-| 10M | 0.003708 ms | 0.055167 ms | 0.06025 ms | Naive |
-| 100M | 0.004708 ms | 0.070208 ms | 0.074583 ms | Naive |
+| 1K | 0.005958 ms | 0.016875 ms | 0.018875 ms | Naive |
+| 10K | 0.009417 ms | 0.023167 ms | 0.02475 ms | Naive |
+| 100K | 0.005834 ms | 0.036084 ms | 0.029416 ms | Naive |
+| 1M | 0.006833 ms | 0.046667 ms | 0.070583 ms | Naive |
+| 10M | 0.010875 ms | 0.060458 ms | 0.104625 ms | Naive |
+| 100M | 0.015208 ms | 0.073334 ms | 0.145333 ms | Naive |
 
 ### Range Update (Naive vs Standard Segment Tree vs Lazy Segment Tree)
 
 | Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
 |------|-------|-------------|-------------------|---------|
-| 1K | 0.071667 ms | 0.017958 ms | 0.032667 ms | Segment |
-| 10K | 0.436583 ms | 0.024958 ms | 0.045333 ms | Segment |
-| 100K | 5.4395 ms | 0.040666 ms | 0.092666 ms | Segment |
-| 1M | 42.906 ms | 0.03925 ms | 0.144708 ms | Segment |
-| 10M | 422.548 ms | 0.081833 ms | 0.23075 ms | Segment |
-| 100M | 4068.01 ms | 0.108667 ms | 0.3705 ms | Segment |
+| 1K | 0.068083 ms | 0.277791 ms | 0.060292 ms | Lazy |
+| 10K | 0.487208 ms | 3.02483 ms | 0.062459 ms | Lazy |
+| 100K | 4.44562 ms | 26.4102 ms | 0.101541 ms | Lazy |
+| 1M | 49.4151 ms | 268.392 ms | 0.184208 ms | Lazy |
+| 10M | 499.767 ms | 2626.15 ms | 0.286333 ms | Lazy |
+| 100M | 4995.55 ms | 29957.4 ms | 0.408042 ms | Lazy |
 
 ### Narrow Range Update - 1000 element range (Naive vs Standard Segment Tree vs Lazy Segment Tree)
 
 | Size | Naive | Segment Tree | Lazy Segment Tree | Winner |
 |------|-------|-------------|-------------------|---------|
 | 1K | skipped | skipped | skipped | N/A |
-| 10K | 0.17325 ms | 0.025875 ms | 0.043875 ms | Segment |
-| 100K | 0.117708 ms | 0.029333 ms | 0.060125 ms | Segment |
-| 1M | 0.17525 ms | 0.02975 ms | 0.083458 ms | Segment |
-| 10M | 0.142667 ms | 0.058458 ms | 0.130583 ms | Segment |
-| 100M | 0.203208 ms | 0.09225 ms | 0.214041 ms | Segment |
+| 10K | 0.173292 ms | 0.842084 ms | 0.056375 ms | Lazy |
+| 100K | 0.163541 ms | 0.831625 ms | 0.085083 ms | Lazy |
+| 1M | 0.192625 ms | 0.766458 ms | 0.104708 ms | Lazy |
+| 10M | 0.183375 ms | 0.948584 ms | 0.15575 ms | Lazy |
+| 100M | 0.223333 ms | 0.942208 ms | 0.311875 ms | Lazy |
 
 ## Why This Is Interesting
 
