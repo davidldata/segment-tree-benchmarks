@@ -85,6 +85,11 @@ void benchmark_point_update(int n) {
     // Generate a random array of size n
     vector<int> arr = generate_random_array(n);
 
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> index_dist(0, n - 1);
+    uniform_int_distribution<> value_dist(1, 1000);
+
     // Build data structures
     vector<int> seg_tree(4 * n, 0);
     segtree::build(arr, seg_tree, 0, 0, n - 1);
@@ -96,8 +101,8 @@ void benchmark_point_update(int n) {
     // Time Naive Point Update
     double naive_time = time_operation([&]() {
         for (int i = 0; i < repetitions; ++i) {
-            int index = rand() % n;
-            int new_value = rand() % 1000 + 1;
+            int index = index_dist(gen);
+            int new_value = value_dist(gen);
             naive::point_update(arr, index, new_value);
         }
     });
@@ -105,8 +110,8 @@ void benchmark_point_update(int n) {
     // Time Segment Tree Point Update
     double seg_tree_time = time_operation([&]() {
         for (int i = 0; i < repetitions; ++i) {
-            int index = rand() % n;
-            int new_value = rand() % 1000 + 1;
+            int index = index_dist(gen);
+            int new_value = value_dist(gen);
             segtree::point_update(seg_tree, 0, 0, n - 1, index, new_value);
         }
     });
@@ -114,8 +119,8 @@ void benchmark_point_update(int n) {
     // Time Lazy Segment Tree Point Update
     double lazy_tree_time = time_operation([&]() {
         for (int i = 0; i < repetitions; ++i) {
-            int index = rand() % n;
-            int new_value = rand() % 1000 + 1;
+            int index = index_dist(gen);
+            int new_value = value_dist(gen);
             lazytree::point_update(lazy_tree, lazy, 0, 0, n - 1, index, new_value);
         }
     });
@@ -133,6 +138,11 @@ void benchmark_range_update(int n) {
     // Generate a random array of size n
     vector<int> arr = generate_random_array(n);
 
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> index_dist(0, n - 1);
+    uniform_int_distribution<> value_dist(1, 1000);
+
     // Build data structures
     vector<int> lazy_tree(4 * n, 0);
     vector<int> lazy(4 * n, 0);
@@ -143,10 +153,10 @@ void benchmark_range_update(int n) {
     // Time Naive Range Update
     double naive_time = time_operation([&]() {
         for (int i = 0; i < repetitions; ++i) {
-            int left = rand() % n;
-            int right = rand() % n;
+            int left = index_dist(gen);
+            int right = index_dist(gen);
             if (left > right) swap(left, right);
-            int new_value = rand() % 1000 + 1;
+            int new_value = value_dist(gen);
             naive::range_update(arr, left, right, new_value);
         }
     });
@@ -154,10 +164,10 @@ void benchmark_range_update(int n) {
     // Time Lazy Segment Tree Range Update
     double lazy_tree_time = time_operation([&]() {
         for (int i = 0; i < repetitions; ++i) {
-            int left = rand() % n;
-            int right = rand() % n;
+            int left = index_dist(gen);
+            int right = index_dist(gen);
             if (left > right) swap(left, right);
-            int new_value = rand() % 1000 + 1;
+            int new_value = value_dist(gen);
             lazytree::range_update(lazy_tree, lazy, 0, 0, n - 1, left, right, new_value);
         }
     });
@@ -165,10 +175,10 @@ void benchmark_range_update(int n) {
     // Time Segment Tree Range Update
     double seg_tree_time = time_operation([&]() {
         for (int i = 0; i < repetitions; ++i) {
-            int left = rand() % n;
-            int right = rand() % n;
+            int left = index_dist(gen);
+            int right = index_dist(gen);
             if (left > right) swap(left, right);
-            int new_value = rand() % 1000 + 1;
+            int new_value = value_dist(gen);
             segtree::range_update(seg_tree, 0, 0, n - 1, left, right, new_value);
         }
     });
@@ -178,8 +188,71 @@ void benchmark_range_update(int n) {
     cout << "\n** Range Update Benchmark **" << endl;
     cout << "Size: " << n << endl;
     cout << " - Naive: " << naive_time << " ms" << endl;
-    cout << " - Lazy Segment Tree: " << lazy_tree_time << " ms" << endl;
     cout << " - Segment Tree: " << seg_tree_time << " ms" << endl;
+    cout << " - Lazy Segment Tree: " << lazy_tree_time << " ms" << endl;
+
+}
+
+// Helper function for narrow range update benchmarks
+void benchmark_narrow_range_update(int n) {
+    if (n <= 1000) {
+        cout << "\n** Narrow Range Update Benchmark (1000 element range) **" << endl;
+        cout << "Size: " << n << " -- skipped (dataset too small for 1000-element range)" << endl;
+        return;
+    }
+
+    // Generate a random array of size n
+    vector<int> arr = generate_random_array(n);
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> value_dist(1, 1000);
+    uniform_int_distribution<> narrow_dist(0, n - 1001);
+
+    // Build data structures
+    vector<int> lazy_tree(4 * n, 0);
+    vector<int> lazy(4 * n, 0);
+    lazytree::build(arr, lazy_tree, 0, 0, n - 1);
+    vector<int> seg_tree(4 * n, 0);
+    segtree::build(arr, seg_tree, 0, 0, n - 1);
+
+    // Time Naive Range Update
+    double naive_time = time_operation([&]() {
+        for (int i = 0; i < repetitions; ++i) {
+            int left = narrow_dist(gen);
+            int right = left + 999; // always exactly 1000 elements
+            int new_value = value_dist(gen);
+            naive::range_update(arr, left, right, new_value);
+        }
+    });
+
+    // Time Lazy Segment Tree Range Update
+    double lazy_tree_time = time_operation([&]() {
+        for (int i = 0; i < repetitions; ++i) {
+            int left = narrow_dist(gen);
+            int right = left + 999; // always exactly 1000 elements
+            int new_value = value_dist(gen);
+            lazytree::range_update(lazy_tree, lazy, 0, 0, n - 1, left, right, new_value);
+        }
+    });
+
+    // Time Segment Tree Range Update
+    double seg_tree_time = time_operation([&]() {
+        for (int i = 0; i < repetitions; ++i) {
+            int left = narrow_dist(gen);
+            int right = left + 999; // always exactly 1000 elements
+            int new_value = value_dist(gen);
+            segtree::range_update(seg_tree, 0, 0, n - 1, left, right, new_value);
+        }
+    });
+
+    // Print results
+    cout << "\n** Narrow Range Update Benchmark (1000 elements) **" << endl;
+    cout << "Size: " << n << endl;
+    cout << " - Naive: " << naive_time << " ms" << endl;
+    cout << " - Segment Tree: " << seg_tree_time << " ms" << endl;
+    cout << " - Lazy Segment Tree: " << lazy_tree_time << " ms" << endl;
+
 }
 
 int main() {
@@ -222,6 +295,14 @@ int main() {
     benchmark_range_update(size_1m);
     benchmark_range_update(size_10m);
     benchmark_range_update(size_100m);
+
+    cout << "\n-- Narrow Range Update (1000 elements) --" << endl;
+    benchmark_narrow_range_update(size_1k);
+    benchmark_narrow_range_update(size_10k);
+    benchmark_narrow_range_update(size_100k);
+    benchmark_narrow_range_update(size_1m);
+    benchmark_narrow_range_update(size_10m);
+    benchmark_narrow_range_update(size_100m);
 
     return 0;
 }
