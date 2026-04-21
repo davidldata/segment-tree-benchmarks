@@ -4,28 +4,32 @@
 
 using namespace std;
 
-// Naive implementation of segment tree operations for benchmarking purposes.
-// Tests three functions: point update, range sum query, and range update.
-
-void point_update(vector<int>& arr, int index, int value) {
-    arr[index] = value;
-}
-
-int range_sum(vector<int>& arr, int left, int right) {
-    int sum = 0;
-    for (int i = left; i <= right; i++) {
-        sum += arr[i];
+namespace naive {
+    // Naive implementation of segment tree operations for benchmarking purposes.
+    // Tests three functions: point update, range sum query, and range update.
+    
+    void point_update(vector<int>& arr, int index, int value) {
+        arr[index] = value;
     }
-    return sum;
-}
 
-void range_update(vector<int>& arr, int left, int right, int value) {
-    for (int i = left; i <= right; i++) {
-        arr[i] += value;
+    long long range_sum(vector<int>& arr, int left, int right) {
+        long long sum = 0;
+        for (int i = left; i <= right; i++) {
+            sum += arr[i];
+        }
+        return sum;
+    }
+
+    void range_update(vector<int>& arr, int left, int right, int value) {
+        for (int i = left; i <= right; i++) {
+            arr[i] += value;
+        }
     }
 }
 
-int main() {
+void naive_test() {
+    using namespace naive;
+    
     // Create a testbed with 1000 elements initialized to 1    
     int n = 1000;
     vector<int> testbed(n, 1);
@@ -53,5 +57,5 @@ int main() {
     cout << endl;
     cout << "************************************" << endl << endl;
 
-    return 0;
+    return ;
 }
