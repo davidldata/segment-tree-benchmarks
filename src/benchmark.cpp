@@ -44,11 +44,11 @@ void benchmark_range_sum(int n){
     vector<int> arr = generate_random_array(n);
 
     // Build data structures
-    vector<int> seg_tree(4 * n, 0);
+    vector<long long> seg_tree(4 * n, 0);
     segtree::build(arr, seg_tree, 0, 0, n - 1);
     
-    vector<int> lazy_tree(4 * n, 0);
-    vector<int> lazy(4 * n, 0);
+    vector<long long> lazy_tree(4 * n, 0);
+    vector<long long> lazy(4 * n, 0);
     lazytree::build(arr, lazy_tree, 0, 0, n - 1);
 
     // Time Naive Range Sum
@@ -91,10 +91,10 @@ void benchmark_point_update(int n) {
     uniform_int_distribution<> value_dist(1, 1000);
 
     // Build data structures
-    vector<int> seg_tree(4 * n, 0);
+    vector<long long> seg_tree(4 * n, 0);
     segtree::build(arr, seg_tree, 0, 0, n - 1);
-    vector<int> lazy_tree(4 * n, 0);
-    vector<int> lazy(4 * n, 0);
+    vector<long long> lazy_tree(4 * n, 0);
+    vector<long long> lazy(4 * n, 0);
     lazytree::build(arr, lazy_tree, 0, 0, n - 1);
 
 
@@ -144,10 +144,10 @@ void benchmark_range_update(int n) {
     uniform_int_distribution<> value_dist(1, 1000);
 
     // Build data structures
-    vector<int> lazy_tree(4 * n, 0);
-    vector<int> lazy(4 * n, 0);
+    vector<long long> lazy_tree(4 * n, 0);
+    vector<long long> lazy(4 * n, 0);
     lazytree::build(arr, lazy_tree, 0, 0, n - 1);
-    vector<int> seg_tree(4 * n, 0);
+    vector<long long> seg_tree(4 * n, 0);
     segtree::build(arr, seg_tree, 0, 0, n - 1);
 
     // Time Naive Range Update
@@ -210,10 +210,10 @@ void benchmark_narrow_range_update(int n) {
     uniform_int_distribution<> narrow_dist(0, n - 1001);
 
     // Build data structures
-    vector<int> lazy_tree(4 * n, 0);
-    vector<int> lazy(4 * n, 0);
+    vector<long long> lazy_tree(4 * n, 0);
+    vector<long long> lazy(4 * n, 0);
     lazytree::build(arr, lazy_tree, 0, 0, n - 1);
-    vector<int> seg_tree(4 * n, 0);
+    vector<long long> seg_tree(4 * n, 0);
     segtree::build(arr, seg_tree, 0, 0, n - 1);
 
     // Time Naive Range Update

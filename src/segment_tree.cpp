@@ -6,7 +6,7 @@ using namespace std;
 
 namespace segtree {
 // Build the segment tree from the original array
-void build(vector<int>& orig_arr, vector<int>& tree, int curr_node, int curr_left, int curr_right) {
+void build(vector<int>& orig_arr, vector<long long>& tree, int curr_node, int curr_left, int curr_right) {
     // Base case: if the current segment has only one element
     if (curr_left == curr_right) {
         tree[curr_node] = orig_arr[curr_left];
@@ -20,7 +20,7 @@ void build(vector<int>& orig_arr, vector<int>& tree, int curr_node, int curr_lef
 }
 
 // Update the value at a specific point in the segment tree
-void point_update(vector<int>& tree, int curr_node, int curr_left, int curr_right, int target_idx, int new_value) {
+void point_update(vector<long long>& tree, int curr_node, int curr_left, int curr_right, int target_idx, int new_value) {
     // Base case: if the current segment has only one element
     if (curr_left == curr_right) {
         tree[curr_node] = new_value;
@@ -38,7 +38,7 @@ void point_update(vector<int>& tree, int curr_node, int curr_left, int curr_righ
 }
 
 // Query the sum of values in a specific range
-long long range_sum(vector<int>& tree, int curr_node, int curr_left, int curr_right, int query_left, int query_right) {
+long long range_sum(vector<long long>& tree, int curr_node, int curr_left, int curr_right, int query_left, int query_right) {
     // If the current segment is completely outside the query range
     if (query_left > curr_right || query_right < curr_left) {
         return 0; // No overlap
@@ -54,20 +54,22 @@ long long range_sum(vector<int>& tree, int curr_node, int curr_left, int curr_ri
     return left_sum + right_sum; // Partial overlap
 }
 
-void range_update(vector<int>& tree, int curr_node, int curr_left, int curr_right, int update_left, int update_right, int value) {
-    // If the current segment is completely outside the update range
+void range_update(vector<long long>& tree, int curr_node, int curr_left, int curr_right, int update_left, int update_right, int value) {
+    // No overlap
     if (update_left > curr_right || update_right < curr_left) {
-        return; // No overlap
-    }
-    // If the current segment is completely inside the update range
-    if (update_left <= curr_left && curr_right <= update_right) {
-        tree[curr_node] += value; // Add the value to the current node
         return;
     }
-    // If the current segment is partially inside and partially outside the update range
+    // Leaf node
+    if (curr_left == curr_right) {
+        tree[curr_node] += value;
+        return;
+    }
+    // Partial or full overlap: recurse to children
     int mid = curr_left + (curr_right - curr_left) / 2;
     range_update(tree, 2 * curr_node + 1, curr_left, mid, update_left, update_right, value);
     range_update(tree, 2 * curr_node + 2, mid + 1, curr_right, update_left, update_right, value);
+    // Recompute this node from children
+    tree[curr_node] = tree[2 * curr_node + 1] + tree[2 * curr_node + 2];
 }
 }
 
@@ -80,7 +82,7 @@ void segtree_test() {
     // Test each of the functions and print the results.
 
     // Build the segment tree from the testbed
-    vector<int> tree(4 * n); // Allocate space for the segment tree
+    vector<long long> tree(4 * n); // Allocate space for the segment tree
     build(testbed, tree, 0, 0, n - 1); // Build the segment tree from the original array
 
     cout << "****************************" << endl << endl;
