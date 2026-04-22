@@ -41,10 +41,9 @@ the precomputed sum of a specific range of elements. This allows range sum
 queries to run in O(log n) time by combining results from a small number of 
 relevant nodes rather than scanning the full range.
 
-A standard Segment Tree handles point updates efficiently, but range updates 
-are costly because a range update must touch every affected leaf and then 
-ripple the changes back up through the tree, making it O(n log n). This is 
-actually *slower* than the naive O(n) approach for range updates.
+A standard segment tree handles point updates efficiently, but range updates 
+are costly because many affected leaves and ancestor nodes must be updated.
+This is actually *slower* than the naive O(n) approach for range updates.
 
 Lazy Propagation solves this by deferring updates instead of immediately 
 propagating a change to all affected elements; any pending updates are stored at 
@@ -167,6 +166,16 @@ Requires a C++ compiler with C++11 support or later (g++ or clang++).
 The benchmark runs automatically across all dataset sizes and prints results 
 to the console.
 
+## Benchmark Methodology
+To ensure fair and accurate comparisons, all three implementations were evaluated under identical conditions:
+- A single randomly generated input array was used to initialize all data structures  
+- Operation sequences (point updates, range updates, and queries) were pre-generated and replayed across all 
+  implementations  
+- Each benchmark measured only the target operation
+- Checksums were computed after each benchmark to verify that all implementations produced identical final states  
+
+These steps were critical to ensuring that observed performance differences reflect true algorithmic behavior rather than artifacts of the testing approach.
+
 ## Results
 
 Running the benchmark on a MacBook Pro with a M4 Pro processor produced the 
@@ -205,9 +214,9 @@ following results:
 | 10M | 387.457 ms | 2696.82 ms | 0.292875 ms | Lazy |
 | 100M | 3954.32 ms | 27526.7 ms | 0.392041 ms | Lazy |
 
-## Why This Is Interesting
+## Interpreting the Results
 
-The results tell a clear story.
+The results tell a clear story, though the story varies by tested function.
 
 - **Point update** — Naive wins decisively at every size. A direct array 
   write (`arr[index] = value`) is a single operation, while both of the tree 
@@ -244,7 +253,7 @@ the right choice depends entirely on your operational workload:
   though a mixed-workload benchmark would be needed to confirm its theoretical 
   advantage empirically
 
-## Limitations and Future Work
+## Project Limitations and Future Work
 
 - **Mixed workload testing** — this current benchmark measures each operation 
   in isolation. A more realistic benchmark would mix range updates and 
