@@ -49,8 +49,8 @@ long long range_sum(vector<long long>& tree, int curr_node, int curr_left, int c
     }
     // If the current segment is partially inside and partially outside the query range
     int mid = curr_left + (curr_right - curr_left) / 2;
-    int left_sum = range_sum(tree, 2 * curr_node + 1, curr_left, mid, query_left, query_right);
-    int right_sum = range_sum(tree, 2 * curr_node + 2, mid + 1, curr_right, query_left, query_right);
+    long long left_sum = range_sum(tree, 2 * curr_node + 1, curr_left, mid, query_left, query_right);
+    long long right_sum = range_sum(tree, 2 * curr_node + 2, mid + 1, curr_right, query_left, query_right);
     return left_sum + right_sum; // Partial overlap
 }
 
