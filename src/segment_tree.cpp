@@ -73,6 +73,7 @@ void range_update(vector<long long>& tree, int curr_node, int curr_left, int cur
 }
 }
 
+// Renamed main function used to test the segment tree implementation
 void segtree_test() {
     using namespace segtree;
     // Create a testbed with 1000 elements initialized to 1    

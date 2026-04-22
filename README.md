@@ -173,8 +173,10 @@ To ensure fair and accurate comparisons, all three implementations were evaluate
   implementations  
 - Each benchmark measured only the target operation
 - Checksums were computed after each benchmark to verify that all implementations produced identical final states  
+- Benchmark computations were structured to ensure results contributed to observable outputs, preventing compiler 
+  optimizations from eliminating work
 
-These steps were critical to ensuring that observed performance differences reflect true algorithmic behavior rather than artifacts of the testing approach.
+These steps were critical to ensuring that observed performance differences reflect true algorithmic behavior rather than artifacts of the testing approach
 
 ## Results
 
@@ -233,13 +235,14 @@ The results tell a clear story, though the story varies by tested function.
 - **Range update** — This is where we see the most significant result. Lazy 
 Propagation dominates, while Standard Segment Tree turns out to be *worse 
 than Naive*. This is because a range update on a standard Segment Tree must
-touch every affected leaf and rebuild every parent node on the way back up
-which is O(n log n) and is slower than Naive's O(n) for large ranges. Lazy 
-Propagation avoids this entirely by storing pending updates at high-level nodes 
-and deferring much of the tree maintenance work the standard Segment tackles. 
-At 100M elements, Naive takes ~4 seconds, Standard Segment Tree takes ~27 seconds, 
-and Lazy takes under half a millisecond, which is a ~70,000x speedup over the Standard 
-Segment Tree.
+touch every affected leaf and rebuild every parent node on the way back up,
+which requires updating many affected leaves and recomputing their ancestor nodes, 
+resulting in significantly higher overhead than the naive O(n) approach for large 
+ranges. Lazy Propagation avoids this entirely by storing pending updates at 
+high-level nodes and deferring much of the tree maintenance work the standard 
+Segment tackles. At 100M elements, Naive takes ~4 seconds, Standard Segment 
+Tree takes ~27 seconds, and Lazy takes under half a millisecond, which is 
+a ~70,000x speedup over the Standard Segment Tree.
 
 The key takeaway is that **there is no universally best data structure**. Ultimately,
 the right choice depends entirely on your operational workload:
@@ -248,7 +251,7 @@ the right choice depends entirely on your operational workload:
   dramatically faster than Naive
 - **Point updates** — Naive is surprisingly competitive and simplest to implement
 - **Range updates at scale** — Lazy Propagation is the clear winner, and 
-  Standard Segment Tree should be avoided entirely
+  Standard Segment Tree should generally be avoided
 - **Mixed workloads** — Lazy Propagation is the safest all-around choice, 
   though a mixed-workload benchmark would be needed to confirm its theoretical 
   advantage empirically

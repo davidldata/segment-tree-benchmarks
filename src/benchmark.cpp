@@ -9,7 +9,7 @@
 
 using namespace std;
 
-// Timing helper function 
+// Timing helper function
 double time_operation(function<void()> operation) {
     auto start = chrono::high_resolution_clock::now();
     operation();
@@ -224,6 +224,7 @@ void benchmark_range_update(int n) {
 
 }
 
+// Main function to run all benchmarks
 int main() {
 
     cout << "====================================" << endl;

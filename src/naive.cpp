@@ -27,6 +27,7 @@ namespace naive {
     }
 }
 
+// Renamed main function that was used to test the naive implementation
 void naive_test() {
     using namespace naive;
     

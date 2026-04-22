@@ -100,6 +100,7 @@ void point_update(vector<long long>& tree, vector<long long>& lazy, int curr_nod
 }
 }
 
+// Renamed main function used to test the lazy segment tree implementation
 void lazytree_test() {
     using namespace lazytree;
     
