@@ -159,6 +159,7 @@ Requires a C++ compiler with C++11 support or later (g++ or clang++).
 
 ## How to Run
 
+From the `src` directory:
 ```bash
 ./benchmark
 ```

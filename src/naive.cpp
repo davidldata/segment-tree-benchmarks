@@ -44,10 +44,10 @@ void naive_test() {
     cout << endl;
 
     cout << "**Test Point Update**" << endl;
-    cout << "Original value at index 500: " << testbed[500] << endl; // Should print 1
+    cout << "Original value at index 500: " << testbed[500] << endl; 
     cout << "**Update Index 500 to 42**" << endl;
     point_update(testbed, 500, 42);
-    cout << "New value at index 500: " << testbed[500] << endl; // Should print 42
+    cout << "New value at index 500: " << testbed[500] << endl; 
     cout << "New range sum [499, 501] should be 1+42+1 = 44: " << range_sum(testbed, 499, 501) << endl;
     cout << endl;
 

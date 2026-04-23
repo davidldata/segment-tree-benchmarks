@@ -27,8 +27,8 @@ void propagate(vector<long long>& tree, vector<long long>& lazy, int curr_node, 
         tree[curr_node] += (curr_right - curr_left + 1) * lazy[curr_node];
         // If the current node is not a leaf node, propagate the update to its children
         if (curr_left != curr_right) {
-            lazy[2 * curr_node + 1] += lazy[curr_node]; // Propagate to lazy left child
-            lazy[2 * curr_node + 2] += lazy[curr_node]; // Propagate to lazy right child
+            lazy[2 * curr_node + 1] += lazy[curr_node]; 
+            lazy[2 * curr_node + 2] += lazy[curr_node]; 
         }
         // Clear the pending update for the current node
         lazy[curr_node] = 0;
@@ -39,6 +39,7 @@ void propagate(vector<long long>& tree, vector<long long>& lazy, int curr_node, 
 void range_update(vector<long long>& tree, vector<long long>& lazy, int curr_node, int curr_left, int curr_right, int update_left, int update_right, int value) {
     // Propagate any pending updates for the current node
     propagate(tree, lazy, curr_node, curr_left, curr_right);
+
     // If the current segment is completely outside the update range, return
     if (curr_right < update_left || curr_left > update_right) {
         return;
@@ -48,27 +49,32 @@ void range_update(vector<long long>& tree, vector<long long>& lazy, int curr_nod
     if (curr_left >= update_left && curr_right <= update_right) {
         tree[curr_node] += static_cast<long long>(curr_right - curr_left + 1) * value;
         if (curr_left != curr_right) {
-            lazy[2 * curr_node + 1] += value; // Propagate to lazy left child
-            lazy[2 * curr_node + 2] += value; // Propagate to lazy right child
+            lazy[2 * curr_node + 1] += value; 
+            lazy[2 * curr_node + 2] += value; 
         }
         return;
     }
+
     // If the current segment is partially inside the update range, recursively update the left and right subtrees
     int mid = curr_left + (curr_right - curr_left) / 2;
     range_update(tree, lazy, 2 * curr_node + 1, curr_left, mid, update_left, update_right, value);
     range_update(tree, lazy, 2 * curr_node + 2, mid + 1, curr_right, update_left, update_right, value);
+
     // After updating the children, update the current node's value based on the children's values
     tree[curr_node] = tree[2 * curr_node + 1] + tree[2 * curr_node + 2];
 }
 
 // Query the sum of values in a given range [query_left, query_right]
 long long range_sum(vector<long long>& tree, vector<long long>& lazy, int curr_node, int curr_left, int curr_right, int query_left, int query_right) {
+
     // If the current segment is completely outside the query range, return 0
     if (curr_right < query_left || curr_left > query_right) {
         return 0;
     }
+
     // Propagate any pending updates for the current node    
     propagate(tree, lazy, curr_node, curr_left, curr_right);
+
     // If the current segment is completely inside the query range, return the value of the current node
     if (curr_left >= query_left && curr_right <= query_right) {
         return tree[curr_node];
@@ -82,12 +88,15 @@ long long range_sum(vector<long long>& tree, vector<long long>& lazy, int curr_n
 
 // Update the value of a single element in the segment tree with lazy propagation
 void point_update(vector<long long>& tree, vector<long long>& lazy, int curr_node, int curr_left, int curr_right, int index, int new_value) {
+
     // First apply any deferred updates at this node
     propagate(tree, lazy, curr_node, curr_left, curr_right);
+
     // If this segment does not contain the index, stop
     if (index < curr_left || index > curr_right) {
         return;
     }
+
     // If this is the leaf for the target index, assign the new value
     if (curr_left == curr_right) {
         tree[curr_node] = new_value;
@@ -107,8 +116,8 @@ void lazytree_test() {
     // Create a testbed with 1000 elements initialized to 1
     int n = 1000;
     vector<int> orig_arr(n, 1);
-    vector<long long> tree(4 * n, 0); // Segment tree array
-    vector<long long> lazy(4 * n, 0); // Lazy propagation array
+    vector<long long> tree(4 * n, 0); 
+    vector<long long> lazy(4 * n, 0);
 
     // Build the segment tree from the original array
     build(orig_arr, tree, 0, 0, n - 1);
